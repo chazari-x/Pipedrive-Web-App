@@ -1,15 +1,18 @@
 const express = require('express');
 const request = require('request-promise');
+const config = require('config');
 
 const app = express();
 
 const PORT = 5174;
 
 const CLIENT_ID = 'b15398166b2b5d5e';
-const CLIENT_SECRET = '728c41d5342ec7c570b8226aaddda8cea0e4e7a8';
+const CLIENT_SECRET = config.CLIENT_SECRET;
 const REDIRECT_URI = 'https://web.czo.ooo/api/callback';
 const AUTH_URL = `https://oauth.pipedrive.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 const AUTH = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')
+
+// Поля со значениями по умолчанию
 const options = {
   "Job type": {
     "field_type": "enum",
@@ -81,20 +84,21 @@ const options = {
   },
 }
 
-app.get('/api/auth', (req, res) => {
-  res.redirect(AUTH_URL);
-});
-
 app.get('/api', (req, res) => {
   res.send({
     data: []
   });
 });
 
+app.get('/api/auth', (req, res) => {
+  res.redirect(AUTH_URL);
+});
+
 app.get('/api/callback', async (req, res) => {
   const { code } = req.query;
 
   try {
+    // Получаем токен
     const tokenResponse = await request({
       method: 'POST',
       uri: 'https://oauth.pipedrive.com/oauth/token',
@@ -110,6 +114,7 @@ app.get('/api/callback', async (req, res) => {
     });
     console.log(tokenResponse.access_token)
 
+    // Получаем все поля сделок
     const response = await fetch("https://api.pipedrive.com/v1/dealFields", {
       method: "GET",
       headers: {
@@ -124,6 +129,7 @@ app.get('/api/callback', async (req, res) => {
 
     const data = (await response.json()).data;
 
+    // Поля, которые мы хотим создать
     var fields = [
       "Job type",
       "Job source",
@@ -139,10 +145,12 @@ app.get('/api/callback', async (req, res) => {
       "Test select",
     ];
 
+    // Удаляем поля, которые уже существуют
     data.forEach((field) => {
       fields = fields.filter((f) => f !== field.name);
     });
 
+    // Создайте новые поля
     fields.map(await (async (field) => {
       await fetch("https://api.pipedrive.com/v1/dealFields", {
         method: "POST",
@@ -154,7 +162,7 @@ app.get('/api/callback', async (req, res) => {
       })
     }));
 
-    // Установите куки с Secure, HttpOnly и SameSite атрибутами
+    // Установите куки
     res.cookie('auth', `Bearer ${tokenResponse.access_token}`, {
       expires: new Date(Date.now() + 86400 * 1000),
       path: '/',
@@ -171,7 +179,6 @@ app.get('/api/callback', async (req, res) => {
         window.close();
       </script>
     `);
-    // res.redirect('https://web.czo.ooo');
   } catch (error) {
     console.log(error)
     res.send(`

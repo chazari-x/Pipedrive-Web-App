@@ -26,16 +26,6 @@ function App() {
     window.addEventListener('message', function (event) {
       if (event.origin === 'https://web.czo.ooo') {
         setToken(event.data)
-
-        GetDeal(event.data, job ?? "")
-          .then(() => {
-            sdk.initialize()
-              .then(() => setInitialized(true))
-              .catch((e) => setError(e.message))
-          })
-          .catch((e) => {
-            setError(e.message)
-          })
       }
     });
   }
@@ -46,9 +36,9 @@ function App() {
   }
 
   useEffect(() => {
-    const code = getQueryParameter('selectedIds');
-    if (code) {
-      setJob(code);
+    const id = getQueryParameter('selectedIds');
+    if (id) {
+      setJob(id);
     } else {
       setError('No job id')
       return
@@ -61,8 +51,16 @@ function App() {
     }
 
     setToken(token)
+  }, []);
 
-    GetDeal(token, code)
+  useEffect(() => {
+    if (!token) return
+    if (!job) {
+      setError('No job id')
+      return
+    }
+
+    GetDeal(token, job)
       .then(() => {
         sdk.initialize()
           .then(() => setInitialized(true))
@@ -73,7 +71,7 @@ function App() {
         setToken(undefined)
         openAuthWindow()
       })
-  }, []);
+  }, [token]);
 
   return !!token
     ? !error

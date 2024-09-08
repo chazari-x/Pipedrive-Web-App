@@ -126,100 +126,52 @@ const Main: FC<{
   const [updating, setUpdating] = useState(false)
 
   const validate = () => {
-    if (!jobTypeId || !jobSourceId || !jobDescriptionId || !addressId || !cityId || !stateId || !zipCodeId
-      || !areaId || !startDateId || !startTimeId || !endTimeId || !testSelectId) {
-      console.error("Fields are not loaded")
-      return false
-    }
-
-    if (!firstName) {
-      setFirstNameInvalid(true)
-    }
-
-    if (!lastName) {
-      setLastNameInvalid(true)
-    }
-
-    if (!phone) {
-      setPhoneInvalid(true)
-    }
-
-    if (!jobType) {
-      setJobTypeInvalid(true)
-    }
-
-    if (!jobSource) {
-      setJobSourceInvalid(true)
-    }
-
-    if (!address) {
-      setAddressInvalid(true)
-    }
-
-    if (!city) {
-      setCityInvalid(true)
-    }
-
-    if (!state) {
-      setStateInvalid(true)
-    }
-
-    if (!zipCode) {
-      setZipCodeInvalid(true)
-    }
-
-    if (!area) {
-      setAreaInvalid(true)
-    }
-
-    if (!startDate) {
-      setStartDateInvalid(true)
-    }
-
-    if (!startTime) {
-      setStartTime(new Date())
-    }
-
-    if (!endTime) {
-      setEndTime(new Date())
-    }
-
-    if (!testSelect) {
-      setTestSelectInvalid(true)
-    }
+    setFirstNameInvalid(!firstName)
+    setLastNameInvalid(!lastName)
+    setPhoneInvalid(!phone)
+    setJobTypeInvalid(!jobType)
+    setJobSourceInvalid(!jobSource)
+    setAddressInvalid(!address)
+    setCityInvalid(!city)
+    setStateInvalid(!state)
+    setZipCodeInvalid(!zipCode)
+    setAreaInvalid(!area)
+    setStartDateInvalid(!startDate)
+    if (!startTime) setStartTime(new Date())
+    if (!endTime) setEndTime(new Date())
+    setTestSelectInvalid(!testSelect)
 
     return !(!firstName || !lastName || !phone || !jobType || !jobSource || !address
-      || !city || !state || !zipCode || !area || !startDate || !startTime || !endTime || !testSelect);
+      || !city || !state || !zipCode || !area || !startDate || !startTime || !endTime || !testSelect
+      || !jobTypeId || !jobSourceId || !jobDescriptionId || !addressId || !cityId || !stateId || !zipCodeId
+      || !areaId || !startDateId || !startTimeId || !endTimeId || !testSelectId)
   }
 
   const updateJob = async () => {
-    if (!validate() || !firstName || !lastName || !phone || !jobType || !jobSource || !address
-      || !city || !state || !zipCode || !area || !startDate || !startTime || !endTime || !testSelect
-      || !jobTypeId || !jobSourceId || !jobDescriptionId || !addressId || !cityId || !stateId || !zipCodeId
-      || !areaId || !startDateId || !startTimeId || !endTimeId || !testSelectId) return
+    if (validate()) return
 
     setUpdating(true)
 
-    CreatePerson(firstName + " " + lastName, phone, email ?? "", token)
+    CreatePerson(firstName + " " + lastName, phone!, email ?? "", token)
       .then((person) => {
         UpdateDeal(
           "Job of " + firstName,
           person.data.id,
 
-          jobType.id, jobTypeId,
-          jobSource.id, jobSourceId,
-          jobDescription ?? "", jobDescriptionId,
+          jobType!.id, jobTypeId!,
+          jobSource!.id, jobSourceId!,
+          jobDescription ?? "", jobDescriptionId!,
 
-          address, addressId,
-          city, cityId,
-          state, stateId,
-          zipCode, zipCodeId,
-          area.id, areaId,
+          address!, addressId!,
+          city!, cityId!,
+          state!, stateId!,
+          zipCode!, zipCodeId!,
+          area!.id, areaId!,
 
-          startDate, startDateId,
-          startTime, startTimeId,
-          endTime, endTimeId,
-          testSelect.id, testSelectId,
+          startDate!, startDateId!,
+          startTime!, startTimeId!,
+          endTime!, endTimeId!,
+          testSelect!.id, testSelectId!,
 
           token, job
         )
@@ -228,48 +180,45 @@ const Main: FC<{
             setUpdated(true)
           })
           .catch(console.error)
-          .finally(() => setCreating(false))
+          .finally(() => setUpdating(false))
       })
       .catch((e) => {
         console.error(e)
-        setCreating(false)
+        setUpdating(false)
       })
   }
 
   const createJob = async () => {
-    if (!validate() || !firstName || !lastName || !phone || !jobType || !jobSource || !address
-      || !city || !state || !zipCode || !area || !startDate || !startTime || !endTime || !testSelect
-      || !jobTypeId || !jobSourceId || !jobDescriptionId || !addressId || !cityId || !stateId || !zipCodeId
-      || !areaId || !startDateId || !startTimeId || !endTimeId || !testSelectId) return
+    if (validate()) return
 
     setCreating(true)
 
-    CreatePerson(firstName + " " + lastName, phone, email ?? "", token)
+    CreatePerson(firstName + " " + lastName, phone!, email ?? "", token)
       .then((person) => {
         CreateDeal(
           "Job of " + firstName,
           person.data.id,
 
-          jobType.id, jobTypeId,
-          jobSource.id, jobSourceId,
-          jobDescription ?? "", jobDescriptionId,
+          jobType!.id, jobTypeId!,
+          jobSource!.id, jobSourceId!,
+          jobDescription ?? "", jobDescriptionId!,
 
-          address, addressId,
-          city, cityId,
-          state, stateId,
-          zipCode, zipCodeId,
-          area.id, areaId,
+          address!, addressId!,
+          city!, cityId!,
+          state!, stateId!,
+          zipCode!, zipCodeId!,
+          area!.id, areaId!,
 
-          startDate, startDateId,
-          startTime, startTimeId,
-          endTime, endTimeId,
-          testSelect.id, testSelectId,
+          startDate!, startDateId!,
+          startTime!, startTimeId!,
+          endTime!, endTimeId!,
+          testSelect!.id, testSelectId!,
 
           token
         )
           .then((deal) => {
             console.log(deal)
-            setJob((deal.data["id"] as number).toString())
+            setJob(deal.data.id.toString())
             setUpdated(true)
           })
           .catch(console.error)
@@ -357,7 +306,7 @@ const Main: FC<{
       <Button label={!creating ? "Create job" : "Request is sent"} rounded onClick={createJob}
               severity={creating ? "danger" : undefined} disabled={creating || updating}/>
       <Button label={!updating ? "Save info" : "Request is sent"} rounded onClick={updateJob}
-              severity={updating ? "danger" : "secondary"} disabled={updating || creating}/>
+              severity={updating ? "danger" : undefined} disabled={updating || creating}/>
     </div>
   </div>
 }

@@ -12,7 +12,9 @@ export interface dealFields {
 }
 
 export interface deal {
-  data: Record<string, string | number | Object | null>
+  data: {
+    id: number;
+  }
 }
 
 export interface person {
