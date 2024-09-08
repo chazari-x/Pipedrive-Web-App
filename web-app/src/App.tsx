@@ -36,6 +36,10 @@ function App() {
   }
 
   useEffect(() => {
+    sdk.initialize()
+      .then(() => setInitialized(true))
+      .catch((e) => setError(e.message))
+
     const id = getQueryParameter('selectedIds');
     if (id) {
       setJob(id);
@@ -61,11 +65,7 @@ function App() {
     }
 
     GetDeal(token, job)
-      .then(() => {
-        sdk.initialize()
-          .then(() => setInitialized(true))
-          .catch((e) => setError(e.message))
-      })
+      .then(() => {})
       .catch((e) => {
         console.error(e)
         setToken(undefined)

@@ -12,7 +12,7 @@ const Result: FC<{
   }
 
   return <div className="result">
-    <div className="title">Job created</div>
+    <div className="title">Job created/updated</div>
     <Button label={`Job: ${job}`} severity="success" rounded onClick={click}/>
   </div>
 }

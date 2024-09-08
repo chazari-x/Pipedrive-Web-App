@@ -125,7 +125,7 @@ const Main: FC<{
   const [creating, setCreating] = useState(false)
   const [updating, setUpdating] = useState(false)
 
-  const validate = () => {
+  const valid = () => {
     setFirstNameInvalid(!firstName)
     setLastNameInvalid(!lastName)
     setPhoneInvalid(!phone)
@@ -148,7 +148,7 @@ const Main: FC<{
   }
 
   const updateJob = async () => {
-    if (validate()) return
+    if (!valid()) return
 
     setUpdating(true)
 
@@ -189,7 +189,7 @@ const Main: FC<{
   }
 
   const createJob = async () => {
-    if (validate()) return
+    if (!valid()) return
 
     setCreating(true)
 
