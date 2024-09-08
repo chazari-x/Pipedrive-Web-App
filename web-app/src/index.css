@@ -1,0 +1,106 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.main {
+  display: grid;
+  gap: 15px;
+
+}
+
+.page {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  gap: 15px;
+  grid-template-columns: 1fr 1fr;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  min-width: 350px;
+  width: 100%;
+  height: 100%;
+}
+
+form, .line {
+  row-gap: 10px;
+  column-gap: 10px;
+}
+
+.line {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.line > span, .line > div {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+input {
+  padding: 10px;
+  width: 100%;
+}
+
+.p-cascadeselect-trigger {
+  position: relative;
+}
+
+.p-cascadeselect-trigger::before {
+  content: "";
+  height: 70%;
+  border-left: 1px solid #d1d5db;
+  position: absolute;
+  left: 0;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+@layer primereact {
+  .p-button {
+    background: #f3db00;
+    border: 1px solid #f3db00;
+  }
+
+  .p-button:not(:disabled):hover {
+    background: #a59500;
+    border: 1px solid #a59500;
+  }
+}
+
+.p-button {
+  color: #000000;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
